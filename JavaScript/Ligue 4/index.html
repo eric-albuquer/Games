@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ligue 4</title>
+    <link rel="stylesheet" type="text/css" href="estilo.css">
+</head>
+
+<body>
+    <h1>Jogo ligue 4!</h1>
+    <div class="container">
+        <div class="score-and-buttons">
+            <div class="pontuacao">
+                <table>
+                    <tr>
+                        <td>Azul:</td>
+                        <td id="pontuacaoAzul">0</td>
+                    </tr>
+                    <tr>
+                        <td>Amarela:</td>
+                        <td id="pontuacaoAmarela">0</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="reiniciar-div">
+                <button id="reiniciar" onclick="reiniciar()">Reiniciar</button>
+                <button id="robo" onclick="automatico()">Nº Jogadores</button>
+                <h2 id="auto">Automático</h2>
+            </div>
+        </div>
+
+        <table>
+            <tbody id="board">
+            </tbody>
+        </table>
+    </div>
+    <script lang="JavaScript" src="peca.js"></script>
+    <script lang="JavaScript" src="tabuleiro.js"></script>
+    <script lang="JavaScript" src="jogo.js"></script>
+    <script lang="JavaScript" src="temakinha.js"></script>
+    <script lang="JavaScript" src="curvaNormal.js"></script>
+</body>
+
+</html>
