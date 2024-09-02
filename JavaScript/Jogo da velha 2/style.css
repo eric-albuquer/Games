@@ -1,0 +1,18 @@
+html, body {
+    height: 100%; /* Garante que o body ocupe toda a altura da tela */
+    margin: 0; /* Remove margens padrão */
+    display: flex; /* Define o layout como Flexbox */
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+    align-items: center; /* Centraliza o conteúdo verticalmente */
+    background-image: url('https://static.vecteezy.com/ti/vetor-gratis/p3/25554299-controle-de-video-game-jogos-controlador-jogos-neon-em-muro-sombrio-fundo-tijolo-parede-neon-icone-vetor.jpg');
+    background-size: cover; /* Faz a imagem cobrir toda a tela */
+    background-position: center; /* Centraliza a imagem */
+    background-repeat: no-repeat; /* Evita que a imagem se repita */
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column; /* Mantém os elementos empilhados verticalmente */
+    text-align: center; /* Centraliza o texto */
+}
