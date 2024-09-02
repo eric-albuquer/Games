@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        main {
+            text-align: center;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        th,
+        td {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        td.empty {
+            background-color: white;
+        }
+
+        td.filled {
+            background-color: blue;
+        }
+
+        #pontuacao {
+            font-size: 25px;
+            font-weight: bold;
+            margin-top: 5px;
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Tetris</h1>
+        <p id="pontuacao"></p>
+    </header>
+
+    <main>
+        <table id="tabuleiro"></table>
+    </main>
+
+    <audio id="meuAudio" autoplay loop>
+        <source src="https://archive.org/download/TetrisThemeMusic/Tetris.mp3" type="audio/mp3">
+        Seu navegador não suporta o elemento de áudio.
+    </audio>
+
+
+    <script>
+
+        const meuAudio = document.getElementById("meuAudio");
+
+        // Função para iniciar a reprodução do áudio
+        function iniciarReproducao() {
+            meuAudio.play();
+            // Remover o evento de tecla após a reprodução iniciar para evitar repetições
+            document.removeEventListener("keydown", iniciarReproducao);
+        }
+
+        // Adicionar um ouvinte de tecla ao documento para iniciar a reprodução na primeira tecla pressionada
+        document.addEventListener("keydown", iniciarReproducao);
+
+        const tabuleiro = [];
+        const LINHAS = 20;
+        const COLUNAS = 10;
+
+        function criarTabuleiro() {
+            for (let i = 0; i < LINHAS; i++) {
+                tabuleiro[i] = [];
+                for (let j = 0; j < COLUNAS; j++) {
+                    tabuleiro[i][j] = 0;
+                }
+            }
+        }
+
+        function exibirTabuleiro() {
+            const table = document.getElementById("tabuleiro");
+            table.innerHTML = "";
+
+            for (let i = 0; i < LINHAS; i++) {
+                const row = table.insertRow();
+
+                for (let j = 0; j < COLUNAS; j++) {
+                    const cell = row.insertCell();
+                    cell.className = (tabuleiro[i][j] === 0) ? 'empty' : 'filled';
+                }
+            }
+        }
+
+        const pecas = [
+            [[1, 1, 1, 1]],
+            [[1, 1], [1, 1]],
+            [[1, 1, 1], [1]],
+            [[1, 1, 1], [0, 0, 1]],
+            [[1, 1, 1], [0, 1]],
+            [[1, 1, 0], [0, 1, 1]],
+            [[0, 1, 1], [1, 1, 0]]
+        ]
+
+        function colocarPeca(peca) {
+            for (let i = 0; i < peca.length; i++) {
+                for (let j = 0; j < peca[i].length; j++) {
+                    if (tabuleiro[i][j + 4] === 0) {
+                        if (peca[i][j] === 1) {
+                            tabuleiro[i][j + 4] = peca[i][j]
+                        }
+                    }
+                }
+            }
+        }
+
+        function colocarPecaAleatoria() {
+            const numPeca = Math.round(Math.random() * 6)
+            colocarPeca(pecas[numPeca])
+        }
+
+        function descerPeca() {
+            chao()
+            if (pecaEmbaixo()) {
+                console.log("Peça em baixo")
+                setTimeout(function () {
+                    colocarPecaAleatoria()
+                }, 200);
+
+                return
+            }
+
+            for (let i = LINHAS - 1; i >= 0; i--) {
+                for (let j = 0; j < COLUNAS; j++) {
+                    if (tabuleiro[i][j] === 1 && i < LINHAS - 1) {
+                        tabuleiro[i][j] = 0
+                        tabuleiro[i + 1][j] = 1
+                    }
+                }
+            }
+        }
+
+        function chao() {
+            for (let i = 0; i < LINHAS; i++) {
+                for (let j = 0; j < COLUNAS; j++) {
+                    if (tabuleiro[LINHAS - 1][j] === 1) {
+                        console.log("no chao")
+                        congelarPeca()
+                        setTimeout(function () {
+                            colocarPecaAleatoria()
+                        }, 200);
+                        return
+                    }
+                }
+            }
+
+        }
+
+        function pecaEmbaixo() {
+            for (let i = 0; i < LINHAS - 1; i++) {
+                for (let j = 0; j < COLUNAS; j++) {
+                    if (tabuleiro[i][j] === 1 && tabuleiro[i + 1][j] === 2) {
+                        congelarPeca()
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+
+        function congelarPeca() {
+            for (let i = 0; i < LINHAS; i++) {
+                for (let j = 0; j < COLUNAS; j++) {
+                    if (tabuleiro[i][j] === 1) {
+                        tabuleiro[i][j] = 2
+                    }
+                }
+            }
+        }
+
+        function moverDireita() {
+            if (pecaLimDir()) {
+                return
+            }
+            for (let i = LINHAS - 1; i >= 0; i--) {
+                for (let j = COLUNAS - 1; j >= 0; j--) {
+                    if (tabuleiro[i][j] === 1 && i < LINHAS - 1 && j < COLUNAS - 1) {
+                        tabuleiro[i][j] = 0
+                        tabuleiro[i][j + 1] = 1
+                    }
+                }
+            }
+        }
+
+        function rotacionarPeca() {
+            const tabuleiroCopia = copiarMatriz(tabuleiro)
+            const peca = []
+            for (let i = 0; i < LINHAS; i++) {
+                for (let j = 0; j < COLUNAS; j++) {
+                    if (tabuleiro[i][j] === 1) {
+                        peca.push([i, j])
+                        tabuleiro[i][j] = 0
+                    }
+                }
+            }
+            const dx = peca[1][0]
+            const dy = peca[1][1]
+
+            /*const rotation = [
+                [Math.cos(Math.PI/4), Math.sin(Math.PI/4)],
+                [-Math.sin(Math.PI/4), Math.cos(Math.PI/4)]
+            ]
+
+            const rotation = [
+                [0,1],
+                [-1,0]
+            ]*/
+
+            peca.forEach(element => {
+                const newElement = [element[1] - dy + dx, -element[0] + dx + dy]
+                if (newElement[0] < 0 || newElement[0] >= tabuleiro.length || newElement[1] < 0 || newElement[1] >= tabuleiro[newElement[0]].length) {
+
+                    tabuleiro.length = 0;
+
+                    // Copiar cada linha da nova matriz para a matriz existente
+                    for (let i = 0; i < tabuleiroCopia.length; i++) {
+                        tabuleiro.push([...tabuleiroCopia[i]]);
+                    }
+                    return
+                }
+                tabuleiro[newElement[0]][newElement[1]] = 1
+            });
+        }
+
+        // Função para criar uma cópia de uma matriz bidimensional
+        function copiarMatriz(matrizOriginal) {
+            // Obtém o número de linhas e colunas da matriz original
+            let linhas = matrizOriginal.length;
+            let colunas = matrizOriginal[0].length;
+
+            // Cria uma nova matriz para armazenar a cópia
+            const matrizCopia = new Array(linhas);
+
+            // Loop para percorrer cada linha da matriz
+            for (let i = 0; i < linhas; i++) {
+                // Cria um novo array para armazenar os elementos da linha
+                matrizCopia[i] = new Array(colunas);
+
+                // Loop para percorrer cada coluna da matriz
+                for (let j = 0; j < colunas; j++) {
+                    // Copia o valor da matriz original para a matriz de cópia
+                    matrizCopia[i][j] = matrizOriginal[i][j];
+                }
+            }
+
+            // Retorna a matriz de cópia
+            return matrizCopia;
+        }
+
+        function moverEsquerda() {
+            if (pecaLimEsq()) {
+                return
+            }
+            for (let i = LINHAS - 1; i >= 0; i--) {
+                for (let j = 0; j < COLUNAS; j++) {
+                    if (tabuleiro[i][j] === 1 && i < LINHAS - 1 && j > 0) {
+                        tabuleiro[i][j] = 0
+                        tabuleiro[i][j - 1] = 1
+                    }
+                }
+            }
+        }
+
+        function pecaLimEsq() {
+            for (let i = 0; i < LINHAS; i++) {
+                if (tabuleiro[i][0] === 1) {
+                    return true
+                }
+                for (let j = 0; j < COLUNAS; j++) {
+                    if (tabuleiro[i][j] === 1 && tabuleiro[i][j - 1] === 2) {
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+
+        function pecaLimDir() {
+            for (let i = 0; i < LINHAS; i++) {
+                if (tabuleiro[i][COLUNAS - 1] === 1) {
+                    return true
+                }
+                for (let j = 0; j < COLUNAS; j++) {
+                    if (tabuleiro[i][j] === 1 && tabuleiro[i][j + 1] === 2) {
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+
+        function fimJogo() {
+            if (tabuleiro[0][5] === 2 || tabuleiro[0][4] === 2 || tabuleiro[0][6] === 2) {
+                congelarPeca()
+                return true
+            }
+            return false
+        }
+
+        function pontuar() {
+            for (let i = 0; i < LINHAS; i++) {
+                let k = 0
+                for (let j = 0; j < COLUNAS; j++) {
+                    if (tabuleiro[i][j] === 2) {
+                        k++
+                    }
+                }
+                if (k === COLUNAS) {
+                    for (let w = 0; w < COLUNAS; w++) {
+                        tabuleiro[i][w] = 0
+                    }
+                    for (let x = i; x >= 0; x--) {
+                        for (let y = 0; y < COLUNAS; y++) {
+                            if (x > 0) {
+                                tabuleiro[x][y] = tabuleiro[x - 1][y]
+                            }
+                        }
+                    }
+                    return true
+                }
+            }
+            return false
+        }
+
+        criarTabuleiro();
+        colocarPecaAleatoria()
+        exibirTabuleiro();
+
+        document.addEventListener("keydown", function (event) {
+            if (event.code === "ArrowRight") {
+                moverDireita();
+                exibirTabuleiro();
+            }
+            if (event.code === "ArrowLeft") {
+                moverEsquerda();
+                exibirTabuleiro();
+            }
+            if (event.code === "ArrowUp") {
+                rotacionarPeca()
+                exibirTabuleiro();
+            }
+            if (event.code === "ArrowDown") {
+                descerPeca()
+                exibirTabuleiro();
+            }
+        });
+
+        let pontuacao = 0
+
+        function gameLoop() {
+            if (fimJogo()) {
+                window.alert("GAME OVER")
+                return
+            }
+            // Coloque o código que você quer executar após o atraso aqui
+            setTimeout(function () {
+                descerPeca();
+                if (pontuar()) {
+                    pontuacao++
+                }
+                exibirTabuleiro();
+                gameLoop()
+            }, 800);
+            const pontuacaoElement = document.getElementById("pontuacao")
+            pontuacaoElement.textContent = `Pontos: ${pontuacao}`
+        }
+
+        gameLoop()
+    </script>
+
+</body>
+
+</html>
