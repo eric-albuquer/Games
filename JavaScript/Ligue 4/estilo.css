@@ -1,0 +1,187 @@
+.blue,
+.yellow {
+    width: 80px;
+    height: 80px;
+    background-color: #3498db;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.blue {
+    background-color: blue;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+.empty-cell {
+    width: 80px;
+    height: 80px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(to bottom, #30005e, #00087c);
+    overflow: hidden; /* Impede a rolagem vertical */
+}
+
+
+table {
+    border-collapse: separate;
+    border-spacing: 5px;
+}
+
+button#reiniciar {
+    padding: 10px 20px;
+    background-color: #7e0000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 50px;
+    margin-top: 100px;
+    background: linear-gradient(to bottom, #2980b9, #29b954);
+}
+
+.pontuacao,
+.reiniciar-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.pontuacao table {
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    border-collapse: collapse;
+}
+
+.pontuacao table tr {
+    border: 2px solid #c1e6ff;
+}
+
+.pontuacao table td {
+    padding: 10px 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.pontuacao table td:first-child {
+    font-weight: bold;
+    background-color: #00365a;
+    color: white;
+}
+
+@media (max-width: 767px) {
+    body,
+    .container {
+        width: 100%;
+        padding: 0;
+        margin-top: 0px;
+    }
+
+    .blue,
+    .yellow,
+    .empty-cell {
+        width: 10vw;
+        height: 10vw;
+    }
+
+    .pontuacao table {
+        font-size: 26px;
+    }
+
+    button#reiniciar {
+        padding: 5px 10px;
+        font-size: 20px;
+    }
+
+    .reiniciar-div {
+        margin: 10px;
+    }
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    font-family: 'Your-Font', sans-serif;
+    font-size: 36px;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#robo {
+    background-color: #29b954; /* Cor de fundo verde */
+    color: white; /* Cor do texto branco */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    margin-bottom: 20px;
+}
+
+#robo:hover {
+    background-color: #3ecf77; /* Cor de fundo alterada quando o mouse está sobre o botão */
+}
+
+#robo:active {
+    background-color: #00eeff; /* Cor de fundo alterada quando o botão está ativo (clicado) */
+}
+
+h2 {
+    background-color: #ff6600; /* Cor de fundo laranja (você pode ajustar a cor a seu gosto) */
+    color: white; /* Cor do texto branco */
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 20px;
+    text-align: center; /* Alinhar o texto ao centro */
+    margin-top: 0px; /* Adicionar margem superior para separação */
+}
+
+/* ... (your existing CSS code) ... */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 50px;
+    margin-top: 100px;
+    background: linear-gradient(to bottom, #2980b9, #29b954);
+}
+
+.score-and-buttons {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%; /* Ensures it takes the full width of the container */
+    margin-bottom: 20px; /* Separation between the table and buttons */
+}
