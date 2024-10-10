@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.0/lib/p5.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #282c34;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #score {
+            font-size: 3rem;
+            background: linear-gradient(90deg, #ff6f61, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            border: 3px solid #ffcc00;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+        }
+
+        p {
+            font-size: 1.5rem;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            border: 2px solid #ff6f61;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        p:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <p>Score: <strong id="score">0</strong></p>
+    <script>
+        const min = Math.min(window.innerWidth, window.innerHeight)
+        const width = min * 0.8
+        const height = min * 0.8
+
+        const rows = 30
+        const cols = 30
+
+        class Cell {
+            static empty = 0
+            static snake = 1
+            static food = 2
+        }
+
+        const matrix = []
+        for (let i = 0; i < rows; i++) {
+            matrix[i] = []
+            for (let j = 0; j < cols; j++) {
+                matrix[i][j] = Cell.empty
+            }
+        }
+
+        let foodX
+        let foodY
+
+        function newFood() {
+            let x, y
+            do {
+                x = Math.floor(Math.random() * cols)
+                y = Math.floor(Math.random() * rows)
+            } while (matrix[y][x] == Cell.snake)
+            foodX = x
+            foodY = y
+            matrix[y][x] = Cell.food
+        }
+
+        let snakeX = [16, 17, 18]
+        let snakeY = [10, 10, 10]
+
+        let snake_length = 3
+
+        let dx = -1
+        let dy = 0
+
+        function move() {
+            const lastX = snakeX[snake_length - 1]
+            const lastY = snakeY[snake_length - 1]
+
+            const nx = snakeX[0] + dx
+            const ny = snakeY[0] + dy
+
+            if (nx < 0 || nx >= cols || ny < 0 || ny >= rows)
+                return true
+
+            for (let i = snake_length - 1; i > 0; i--) {
+                snakeX[i] = snakeX[i - 1]
+                snakeY[i] = snakeY[i - 1]
+
+                matrix[snakeY[i]][snakeX[i]] = Cell.snake
+
+                if (snakeX[i] === nx && snakeY[i] === ny)
+                    return true
+            }
+
+            if (matrix[ny][nx] == Cell.food) {
+                snakeX.push(lastX)
+                snakeY.push(lastY)
+                snake_length++
+                newFood()
+            } else {
+                matrix[lastY][lastX] = Cell.empty
+            }
+
+            snakeX[0] = nx
+            snakeY[0] = ny
+
+            matrix[snakeY[0]][snakeX[0]] = Cell.snake
+
+            return false
+        }
+
+        function reset() {
+            snakeX = [16, 17, 18]
+            snakeY = [10, 10, 10]
+
+            snake_length = 3
+
+            dx = -1
+            dy = 0
+
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    matrix[i][j] = Cell.empty
+                }
+            }
+
+            newFood()
+        }
+
+        function drawMatrix() {
+            const cellW = width / cols
+            const cellH = height / rows
+
+            for (let i = 0; i < rows; i++) {
+                const y = i * cellH
+                for (let j = 0; j < cols; j++) {
+                    const x = j * cellW
+                    let color = [0, 0, 0]
+                    if (matrix[i][j] == Cell.snake) color = [0, 255, 0]
+                    else if (matrix[i][j] == Cell.food) color = [255, 0, 0]
+                    fill(color)
+                    rect(x, y, cellW, cellH)
+                }
+
+            }
+        }
+
+        function keyPressed() {
+            if (keyCode == LEFT_ARROW && !dx) {
+                dx = -1
+                dy = 0
+            } else if (keyCode == RIGHT_ARROW && !dx) {
+                dx = 1
+                dy = 0
+            } else if (keyCode == UP_ARROW && !dy) {
+                dx = 0
+                dy = -1
+            } else if (keyCode == DOWN_ARROW && !dy) {
+                dx = 0
+                dy = 1
+            }
+        }
+
+        function setup() {
+            createCanvas(width, height)
+            frameRate(12)
+            reset()
+        }
+
+        const scoreElement = document.getElementById("score")
+
+        function draw() {
+            if (move()) {
+                window.alert("Game over")
+                reset()
+            }
+            scoreElement.innerHTML = snake_length - 3
+            drawMatrix()
+        }
+    </script>
+</body>
+
+</html>
