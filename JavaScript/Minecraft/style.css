@@ -1,0 +1,9 @@
+*{
+    margin: 0;
+    overflow: hidden;
+    background-color: rgb(134, 176, 255);
+}
+
+canvas{
+    cursor: none;
+}
