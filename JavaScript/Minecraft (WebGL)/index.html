@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebGL Minecraft</title>
+  <script src="lib.js"></script>
+  
+  <style>
+    *{
+        margin: 0;
+        overflow: hidden;
+    }
+    canvas {
+      display: block;
+      margin: auto;
+      background-color: #000;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="webglCanvas"></canvas>
+  <script src="loadWebGL.js"></script>
+  <script src="textures.js"></script>
+  <script src="cube.js"></script>
+  <script src="blocksBuffer.js"></script>
+  <script src="triangleBuffer.js"></script>
+  <script src="io.js"></script>
+  <script src="physics.js"></script>
+  <script src="render.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
